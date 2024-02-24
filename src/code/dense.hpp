@@ -33,8 +33,8 @@ DenseMatrix<T>::DenseMatrix(const std::vector<std::vector<T>>& data){
 }
 
 
-template<typename T, typename U>
-std::vector<T> operator*(const DenseMatrix<T>& A, const std::vector<U>& b){
+template<typename T>
+std::vector<T> operator*(const DenseMatrix<T>& A, const std::vector<T>& b){
         std::vector<T> res(A.get_size_M(), 0);
         for(std::size_t i = 0; i < A.get_size_M(); i++){
                 for(std::size_t j = 0; j < b.size(); j++){
@@ -45,8 +45,8 @@ std::vector<T> operator*(const DenseMatrix<T>& A, const std::vector<U>& b){
 }
 
 
-template<typename T, typename U>
-std::vector<T> operator*(const std::vector<U>& b, const DenseMatrix<T>& A){
+template<typename T>
+std::vector<T> operator*(const std::vector<T>& b, const DenseMatrix<T>& A){
         std::vector<T> res(A.get_size_N(), 0);
         for(std::size_t i = 0; i < A.get_size_N(); i++){
                 for(std::size_t j = 0; j < A.get_size_M(); j++){
@@ -57,8 +57,8 @@ std::vector<T> operator*(const std::vector<U>& b, const DenseMatrix<T>& A){
 }
 
 
-template<typename T, typename U>
-DenseMatrix<T> operator*(const DenseMatrix<T>& A, U b){
+template<typename T>
+DenseMatrix<T> operator*(const DenseMatrix<T>& A, const T& b){
         std::vector<T> res;
         res = A.get_values() * b;
         DenseMatrix<T> RES(res, A.get_size_M(), A.get_size_N());
@@ -66,8 +66,8 @@ DenseMatrix<T> operator*(const DenseMatrix<T>& A, U b){
 }
 
 
-template<typename T, typename U>
-DenseMatrix<T> operator*(U a, const DenseMatrix<T>& A){
+template<typename T>
+DenseMatrix<T> operator*(const T& a, const DenseMatrix<T>& A){
         std::vector<T> res;
         res = A.get_values() * a;
         DenseMatrix<T> RES(res, A.get_size_M(), A.get_size_N());
@@ -77,10 +77,10 @@ DenseMatrix<T> operator*(U a, const DenseMatrix<T>& A){
 
 template<typename T>
 DenseMatrix<T> operator+(const DenseMatrix<T>& A, const DenseMatrix<T>& B){
-        std::vector<T> res;
+	std::vector<T> res(A.get_size_M() * A.get_size_N());
         for(std::size_t i = 0; i < A.get_size_M(); i++){
                 for(std::size_t j = 0; j < A.get_size_N(); j++){
-                        res.push_back(A(i, j) + B(i, j));
+                        res[i * A.get_size_N() + j] = (A(i, j) + B(i, j));
                 }
         }
         DenseMatrix<T> RES(res, A.get_size_M(), A.get_size_N());
@@ -90,13 +90,12 @@ DenseMatrix<T> operator+(const DenseMatrix<T>& A, const DenseMatrix<T>& B){
 
 template<typename T>
 DenseMatrix<T> operator-(const DenseMatrix<T>& A, const DenseMatrix<T>& B){
-        std::vector<T> res;
+	DenseMatrix<T> RES = A;
         for(std::size_t i = 0; i < A.get_size_M(); i++){
                 for(std::size_t j = 0; j < A.get_size_N(); j++){
-                        res.push_back(A(i, j) - B(i, j));
+                        RES(i, j) =(A(i, j) - B(i, j));
                 }
         }
-        DenseMatrix<T> RES(res, A.get_size_M(), A.get_size_N());
         return RES;
 }
 

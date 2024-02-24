@@ -21,7 +21,7 @@ std::vector<T> operator-(const std::vector<T>& a, const std::vector<T>& b){
 }
 
 template<typename T>
-std::vector<T> operator*(double a, const std::vector<T>& b){
+std::vector<T> operator*(const T& a, const std::vector<T>& b){
         std::vector<T> res;
         for(std::size_t i = 0; i < b.size(); i++)
                 res.push_back(a * b[i]);
@@ -29,7 +29,7 @@ std::vector<T> operator*(double a, const std::vector<T>& b){
 }
 
 template<typename T>
-std::vector<T> operator*(const std::vector<T>& a, double b){
+std::vector<T> operator*(const std::vector<T>& a, const T& b){
         std::vector<T> res;
         for(std::size_t i = 0; i < a.size(); i++)
                 res.push_back(a[i] * b);

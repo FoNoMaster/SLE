@@ -6,7 +6,7 @@
 TEST(Dense, right_product){
         std::vector<std::vector<double>> a{{1, 2}, {3, 4}};
 	DenseMatrix A(a);
-        A = A * 2;
+        A = A * 2.0;
         std::vector<double> b{2, 4, 6, 8};
         for(std::size_t i = 0; i < b.size(); i++){
                 ASSERT_NEAR(A.get_values()[i], b[i], pow(10, -15));
@@ -17,7 +17,7 @@ TEST(Dense, right_product){
 TEST(Dense, left_product){
         std::vector<std::vector<double>> a{{1, 2}, {3, 4}};
         DenseMatrix A(a);
-        A = 2 * A;
+        A = 2.0 * A;
         std::vector<double> b{2, 4, 6, 8};
         for(std::size_t i = 0; i < b.size(); i++){
                 ASSERT_NEAR(A.get_values()[i], b[i], pow(10, -15));

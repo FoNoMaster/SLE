@@ -17,6 +17,9 @@ public:
 	const std::vector<T>& get_vals() const{return vals_;}
 	const std::vector<std::size_t>& get_cols() const{return cols_;}
 	const std::vector<std::size_t>& get_rows() const{return rows_;}
+	const T& v(const std::size_t& i) const{return vals_[i];}
+	const T& c(const std::size_t& i) const{return cols_[i];}
+	const T& r(const std::size_t& i) const{return rows_[i];}
 
 	T operator()(std::size_t i, std::size_t j) const;
 
@@ -81,8 +84,8 @@ std::vector<T> CSR_Matrix<T>::operator*(const std::vector<T>& b) const{
         return res;
 }
 
-template<typename T, typename U>
-CSR_Matrix<T> operator*(const CSR_Matrix<T>& A, const U& b){
+template<typename T>
+CSR_Matrix<T> operator*(const CSR_Matrix<T>& A, const T& b){
 	std::vector<T> res1 = A.get_vals() * b;
         std::vector<std::size_t> res2 = A.get_cols();
         std::vector<std::size_t> res3 = A.get_rows();
@@ -91,8 +94,8 @@ CSR_Matrix<T> operator*(const CSR_Matrix<T>& A, const U& b){
 }
 
 
-template<typename T, typename U>
-CSR_Matrix<T> operator*(const U& b, const CSR_Matrix<T>& A){
+template<typename T>
+CSR_Matrix<T> operator*(const T& b, const CSR_Matrix<T>& A){
         std::vector<T> res1 = A.get_vals() * b;
         std::vector<std::size_t> res2 = A.get_cols();
         std::vector<std::size_t> res3 = A.get_rows();

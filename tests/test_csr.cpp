@@ -35,3 +35,42 @@ TEST(CSR, right_multiply_by_vector){
                 ASSERT_NEAR(res[i], real_res[i], pow(10, -15));
         }
 }
+
+TEST(CSR, Simple_Iteration_Method){
+	std::vector<double> vals = {1, 2, 0, 2, 6, 1, 0, 1, 10};
+    	CSR_Matrix<double> A(vals, 3, 3);
+
+	std::vector<double> x0 = {4, 4, 4};
+	std::vector<double> b = {5, 17, 32};
+    	double tol = 1e-20;
+	std::vector<double> x = Simple_Iteration_Method(A, b, x0, tol, 10000);
+	std::vector<double> expected = {1, 2, 3};
+    	for (std::size_t j = 0; j < 3; ++j)
+        	ASSERT_NEAR(expected[j], x[j], 0.01);
+}
+
+TEST(CSR, Jacobi_Method){
+	std::vector<double> vals = {1, 2, 0, 2, 6, 1, 0, 1, 10};
+        CSR_Matrix<double> A(vals, 3, 3);
+
+        std::vector<double> x0 = {4, 4, 4};
+        std::vector<double> b = {5, 17, 32};
+        double tol = 1e-20;
+        std::vector<double> x = Jacobi_Method(A, b, x0, tol, 10000);
+        std::vector<double> expected = {1, 2, 3};
+        for (std::size_t j = 0; j < 3; ++j)
+                ASSERT_NEAR(expected[j], x[j], 0.01);
+}
+
+TEST(CSR, Gauss_Sejdel_Method){
+        std::vector<double> vals = {1, 2, 0, 2, 6, 1, 0, 1, 10};
+        CSR_Matrix<double> A(vals, 3, 3);
+
+        std::vector<double> x0 = {4, 4, 4};
+        std::vector<double> b = {5, 17, 32};
+        double tol = 1e-20;
+        std::vector<double> x = Gauss_Sejdel_Method(A, b, x0, tol, 10000);
+        std::vector<double> expected = {1, 2, 3};
+        for (std::size_t j = 0; j < 3; ++j)
+                ASSERT_NEAR(expected[j], x[j], 0.01);
+}

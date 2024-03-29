@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <code/CSR.hpp>
+#include <code/solvers.hpp>
 #include <cmath>
 
 
@@ -38,20 +38,21 @@ TEST(CSR, right_multiply_by_vector){
 
 TEST(CSR, Simple_Iteration_Method){
 	std::vector<double> vals = {1, 2, 0, 2, 6, 1, 0, 1, 10};
-    	CSR_Matrix<double> A(vals, 3, 3);
+    CSR_Matrix<double> A(vals, 3, 3);
 
 	std::vector<double> x0 = {4, 4, 4};
 	std::vector<double> b = {5, 17, 32};
-    	double tol = 1e-20;
+    double tol = 1e-20;
 	std::vector<double> x = Simple_Iteration_Method(A, b, x0, tol, 10000);
 	std::vector<double> expected = {1, 2, 3};
-    	for (std::size_t j = 0; j < 3; ++j)
-        	ASSERT_NEAR(expected[j], x[j], 0.01);
+    for (std::size_t j = 0; j < 3; ++j)
+        ASSERT_NEAR(expected[j], x[j], 0.01);
 }
 
 TEST(CSR, Jacobi_Method){
 	std::vector<double> vals = {1, 2, 0, 2, 6, 1, 0, 1, 10};
         CSR_Matrix<double> A(vals, 3, 3);
+
 
         std::vector<double> x0 = {4, 4, 4};
         std::vector<double> b = {5, 17, 32};
@@ -73,4 +74,50 @@ TEST(CSR, Gauss_Sejdel_Method){
         std::vector<double> expected = {1, 2, 3};
         for (std::size_t j = 0; j < 3; ++j)
                 ASSERT_NEAR(expected[j], x[j], 0.01);
+}
+
+TEST(Chebyshev, Test1) {
+    std::vector<double> vals = {1, 2, 0, 2, 6, 1, 0, 1, 10};
+    CSR_Matrix<double> A(vals, 3, 3);
+
+    std::vector<double> x0 = {4, 4, 4};
+    std::vector<double> b = {5, 17, 32};
+    double tol = 1e-20;
+
+    double lambda_min = 0.287;
+    double lambda_max = 10.261;
+    std::vector<double> x = chebyshev(A, b, x0, lambda_max, lambda_min, 7, tol);
+    std::vector<double> expected = {1, 2, 3};
+    for (std::size_t j = 0; j < 3; ++j)
+        ASSERT_NEAR(expected[j], x[j], 0.01);
+}
+
+
+TEST(FGD, Test1)
+{
+    std::vector<double> vals = {1, 2, 0, 2, 6, 1, 0, 1, 10};
+    CSR_Matrix<double> A(vals, 3, 3);
+
+    std::vector<double> x0 = {4, 4, 4};
+    std::vector<double> b = {5, 17, 32};
+    double tol = 1e-10;
+    std::vector<double> x = FGD(A, b, x0, tol);
+    std::vector<double> expected = {1, 2, 3};
+    for (std::size_t j = 0; j < 3; ++j)
+        ASSERT_NEAR(expected[j], x[j], 0.01);
+}
+
+TEST(Sym_Gauss_Zeidel_Method, Test1)
+{
+    std::vector<double> vals = {1, 2, 0, 2, 6, 1, 0, 1, 10};
+    CSR_Matrix<double> A(vals, 3, 3);
+
+    std::vector<double> x0 = {4, 4, 4};
+    std::vector<double> b = {5, 17, 32};
+    double tol = 1e-20;
+    std::vector<double> x = Sym_Gauss_Sejdel_Method(A, b, x0, tol, 10000);
+    std::vector<double> expected = {1, 2, 3};
+    for (std::size_t j = 0; j < 3; ++j) {
+        ASSERT_NEAR(expected[j], x[j], 0.01);
+    }
 }

@@ -6,10 +6,10 @@ else ()
 		code/CSR.hpp
 		code/dense.hpp
 		code/vector.hpp
+        code/tridiag.hpp
+        code/solvers.hpp
 	)
 
-	set(SOURCES
-        )
 
     source_group("Header Files" FILES ${HEADERS})
     source_group("Source Files" FILES ${SOURCES})

@@ -229,3 +229,51 @@ std::vector<T> Sym_Gauss_Sejdel_Method(const CSR_Matrix<T>& A, const std::vector
     return x;
 }
 
+
+template<typename T>
+std::vector<T> chebyshevSGS(const CSR_Matrix<T>& A, const std::vector<T>& b, const std::vector<T>& x0, const T& percision, const std::size_t& Niter) {
+    T rho = 0.9;
+    std::vector<T> mu = {1, 1 / rho, 0};
+    std::vector<std::vector<T>> x(3, x0);
+
+    T tmp;
+
+    for (std::size_t j = 0; j < Niter; j++) {
+
+        mu[2] = 2 * mu[1] / rho - mu[0];
+
+        for (std::size_t i = 0; i < x[1].size(); i++) {
+            x[1][i] = b[i];
+            for (std::size_t k = A.r(i); k < A.r(i + 1); k++) {
+                if (i != A.c(k))
+                    x[1][i] -= A.v(k) * x[1][A.c(k)];
+                else
+                    tmp = A.v(k);
+            }
+            x[1][i] /= tmp;
+        }
+
+        for (std::size_t i = x[1].size() - 1; i > 0; i--) {
+            x[1][i] = b[i];
+            for (std::size_t k = A.r(i); k < A.r(i + 1); k++) {
+                if (i != A.c(k))
+                    x[1][i] -= A.v(k) * x[1][A.c(k)];
+                else
+                    tmp = A.v(k);
+            }
+            x[1][i] /= tmp;
+        }
+
+        x[2] = (2 * mu[1])/(rho * mu[2]) * x[1] - (mu[0] / mu[2]) * x[0];
+        mu[0] = mu[1];
+        mu[1] = mu[2];
+        x[0] = x[1];
+        x[1] = x[2];
+
+        if (norm(A * x[1] - b) < percision)
+            break;
+    }
+    return x[2];
+}
+
+

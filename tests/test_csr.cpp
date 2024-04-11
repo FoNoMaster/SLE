@@ -136,3 +136,17 @@ TEST(Sym_Gauss_Zeidel_Method, chebyshevSGS)
         ASSERT_NEAR(expected[j], x[j], 0.01);
     }
 }
+
+TEST(Conjugate_Gradient_Method, Test1)
+{
+    std::vector<double> vals = {1, 2, 0, 2, 6, 1, 0, 1, 10};
+    CSR_Matrix<double> A(vals, 3, 3);
+
+    std::vector<double> x0 = {4, 4, 4};
+    std::vector<double> b = {5, 17, 32};
+    std::vector<double> x = Conjugate_Gradient_Method(A, b, x0);
+    std::vector<double> expected = {1, 2, 3};
+    for (std::size_t j = 0; j < 3; ++j) {
+        ASSERT_NEAR(expected[j], x[j], 0.01);
+    }
+}

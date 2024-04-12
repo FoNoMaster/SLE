@@ -281,16 +281,15 @@ template<typename T>
 std::vector<T> Conjugate_Gradient_Method(const CSR_Matrix<T>& A, const std::vector<T>& b, const std::vector<T>& x0) {
     std::vector<std::vector<T>> x(2, x0);
     std::vector<std::vector<T>> r(2, A * x[0] - b);
-    std::vector<std::vector<T>> d(2, r[0]);
+    std::vector<T> d = r[0];
 
-    while(norm(d[1]) != 0){
-        x[1] = x[0] - (dot(r[0], r[0]))/(dot((A * d[0]), d[0])) * d[0];
+    while(norm(r[1]) != 0){
+        x[1] = x[0] - (dot(r[0], r[0]))/(dot((A * d), d)) * d;
         r[1] = A * x[1] - b;
-        d[1] = r[1] + dot(r[1], r[1]) / dot(r[0], r[0]) * d[0];
+        d = r[1] + dot(r[1], r[1]) / dot(r[0], r[0]) * d;
 
         x[0] = x[1];
         r[0] = r[1];
-        d[0] = d[1];
     }
 
     return x[1];

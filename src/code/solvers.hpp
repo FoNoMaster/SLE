@@ -322,7 +322,6 @@ std::vector<T> Heavy_Ball_Method(const CSR_Matrix<T>& A, const std::vector<T>& b
     std::vector<T> x2 = x0;
     std::vector<T> r(x0.size());
     for (std::size_t i = 0; i < Niter; ++i){
-        std::cout << i << std::endl;
         r = A * x1 - b;
         if (norm(r) < percision){
             break;

@@ -18,8 +18,8 @@ T max_lamda(const CSR_Matrix<T>& A){
 
 
 template<typename T>
-std::vector<T> Simple_Iteration_Method(const CSR_Matrix<T>& A, const std::vector<T>& b, const std::vector<T>& x0, const T& percision, const std::size_t& Niter, const T& lambda_min, const T& lambda_max){
-    double tau = 2 / (lambda_min + lambda_max);
+std::vector<T> Simple_Iteration_Method(const CSR_Matrix<T>& A, const std::vector<T>& b, const std::vector<T>& x0, const T& percision, const std::size_t& Niter, const T& lambda_max){
+    double tau = 2 * 0.9 / (lambda_max);
     std::vector<T> x = x0;
     std::vector<T> r(x0.size());
     for (std::size_t i = 0; i < Niter; ++i){
@@ -150,6 +150,24 @@ std::vector<double> chebyshev(const CSR_Matrix<T>& A, const std::vector<T>& b, c
             r = A * x - b;
             x = x - tau[it] * r;
             r_norm = norm(r);
+        }
+    }
+
+    return x;
+}
+
+template <typename T>
+std::vector<double> chebyshevv(const CSR_Matrix<T>& A, const std::vector<T>& b, const std::vector<T>& x0, const double lambda_max, const double lambda_min, size_t r_, const std::size_t& Niter){
+    std::vector<double> x = x0;
+    std::vector<double> r(b.size());
+
+    std::vector<size_t> index = redecorate(r_);
+    std::vector<double> tau = find_tau(r_, lambda_max, lambda_min);
+
+    for(std::size_t i = 0; i < Niter; i++){
+        for (auto& it : index) {
+            r = A * x - b;
+            x = x - tau[it] * r;
         }
     }
 
@@ -293,5 +311,26 @@ std::vector<T> Conjugate_Gradient_Method(const CSR_Matrix<T>& A, const std::vect
     }
 
     return x[1];
+}
+
+
+template<typename T>
+std::vector<T> Heavy_Ball_Method(const CSR_Matrix<T>& A, const std::vector<T>& b, const std::vector<T>& x0, const T& percision, const std::size_t& Niter, const T& betta){
+    double tau = 1 / max_lamda(A);
+    std::vector<T> x = x0;
+    std::vector<T> x1 = x0;
+    std::vector<T> x2 = x0;
+    std::vector<T> r(x0.size());
+    for (std::size_t i = 0; i < Niter; ++i){
+        std::cout << i << std::endl;
+        r = A * x1 - b;
+        if (norm(r) < percision){
+            break;
+        }
+        x = x1 - tau * r + betta * (x1 - x2);
+        x2 = x1;
+        x1 = x;
+    }
+    return x;
 }
 
